@@ -14,6 +14,7 @@ import os
 from Bio import SeqIO
 from matplotlib import cm
 import random as random
+import warnings
 
 # Set input variables
 def get_args():
@@ -34,12 +35,15 @@ out_file = args.out_file_png_name
 fasta_convert = args.molecule_type
 
 ##### !!!!!DELETE LATER!!!!! #####
-# motif_file = "Fig_1_motifs.txt"
-# input_file = "Figure_1.fasta"
-# out_file = "test.png"
-# fasta_convert = "dna"
+motif_file = "Fig_1_motifs.txt"
+input_file = "Figure_1.fasta"
+out_file = "test.png"
+fasta_convert = "dna"
 
-fasta_convert = fasta_convert.upper()
+##### !!!!!Remove if code does not work and you want to print warnings!!!!! #####
+warnings.filterwarnings("ignore") # ignore all warnings because biopython seems to throw a warning
+
+fasta_convert = fasta_convert.upper()  # make molecule type all uppercase
 
 ##### Global Variables ######
 # Dictionary to store every possible motif
