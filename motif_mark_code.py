@@ -23,6 +23,7 @@ def get_args():
     parser.add_argument("-f", "--file_name", help="path to a fasta file containing gene sequences", type=str)
     parser.add_argument("-m", "--motif_file_name", help="path to a file containing a list of the known motifs", type=str)
     parser.add_argument("-o", "--out_file_png_name", help="Desired outfile path + name for the output png file", type=str)
+    parser.add_argument("-t", "--molecule_type", help="Molecule type of fasta (gene) file: RNA or DNA", type=str)
     return parser.parse_args()
 
 args = get_args()
@@ -30,11 +31,15 @@ args = get_args()
 input_file = args.file_name
 motif_file = args.motif_file_name
 out_file = args.out_file_png_name
+fasta_convert = args.molecule_type
 
 ##### !!!!!DELETE LATER!!!!! #####
-motif_file = "Fig_1_motifs.txt"
-input_file = "Figure_1.fasta"
-out_file = "test.png"
+# motif_file = "Fig_1_motifs.txt"
+# input_file = "Figure_1.fasta"
+# out_file = "test.png"
+# fasta_convert = "dna"
+
+fasta_convert = fasta_convert.upper()
 
 ##### Global Variables ######
 # Dictionary to store every possible motif
@@ -45,7 +50,8 @@ motif_numb = {}
 length_motif = []
 # List storing the differences in lengths of the motifs
 uniq_diff_motif_len = []
-
+# Dictionary for amiguous nucleotides
+ambig_dict = {'U':['T'], 'W':['A', 'T'], 'S':['C','G'], 'M':['A','C'], 'K':['G','T'], 'R':['A','G'], 'Y':['C','T'], 'B':['C','G','T'], 'D':['A','G','T'], 'H':['A','C','T'], 'V':['A','C','G'], 'N':['A','C','G','T']}
 
 class cMotif:
   def __init__(self, mStart_pos, mStop_pos, mNumber):
@@ -71,143 +77,13 @@ def f_IterateMotif(original, sequence, index):
     Returns: Nothing, stores all possible motifs to dictionary'''
     if index == len(original):
         motifDict[sequence] = original
-    elif sequence[index] == 'U': # T or U
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'Y': # C or T
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'W': # A or T
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'S': # C or G
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'M': # A or C
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'K': # G or T
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'R': # A or G
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'Y': # C or T
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'B': # C or G or T
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'D': # A or G or T
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'H': # A or C or T
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'V': # A or C or G
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-    elif sequence[index] == 'N': # A or C or G or T
-        seq_list = list(sequence)
-        seq_list[index] = 'A'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'C'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'G'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
-        seq_list = list(sequence)
-        seq_list[index] = 'T'
-        sequence = "".join(seq_list)
-        f_IterateMotif(original, sequence, index + 1)
+    elif sequence[index] in ambig_dict.keys():
+        current_key = sequence[index]
+        for nuc in ambig_dict[current_key]:
+            seq_list = list(sequence)
+            seq_list[index] = nuc
+            sequence = "".join(seq_list)
+            f_IterateMotif(original, sequence, index + 1)
     else:
         f_IterateMotif(original, sequence, index + 1)
 
@@ -220,11 +96,12 @@ def f_SaveMotifs(motif_file_name):
     with open(motif_file_name) as mf:
         for line in mf:
             line = line.strip()
-            line = line.upper()
-            length_motif.append(len(line))
-            f_IterateMotif(line, line, 0)
-            motif_numb.setdefault(line, index_val)
-            index_val = index_val + 1
+            if line != "":
+                line = line.upper()
+                length_motif.append(len(line))
+                f_IterateMotif(line, line, 0)
+                motif_numb.setdefault(line, index_val)
+                index_val = index_val + 1
     length_motif.sort(reverse=True)
     shortest_motif = length_motif[-1]
     diff_motif_len = []
@@ -245,6 +122,9 @@ def multi2linefasta(file):
     with open(mfasta, 'w') as ofile:
         for record in SeqIO.parse(infile, "fasta"):
             sequence = str(record.seq)
+            if fasta_convert == "RNA":
+                sequence = sequence.replace("u","t")
+                sequence = sequence.replace("U", "T")
             ofile.write('>'+record.description+'\n'+sequence+'\n')
     infile.close()
 
@@ -372,6 +252,7 @@ def f_draw(Complete_Gene_List, lonest_gene):
 
         gene_count = gene_count + 1
     surface.write_to_png(out_file)  # Output to PNG
+
 def main():
     longest_gene_length = 0 # Keep track of the longest gene
 
@@ -410,10 +291,9 @@ def main():
 
     f_draw(gene_list, longest_gene_length)
 
+    print("Gene header name followed by the count of motifs in each gene")
     for obj in gene_list:
         print(obj.mHeaderName)
-        print(len(obj.mMotifList))
-        print(obj.mLength)
         print(obj.mMotifDict)
 
     remove_temp_file = "rm singleline.fasta" # Command to move temp file
