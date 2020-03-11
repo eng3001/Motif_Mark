@@ -8,4 +8,4 @@
 - -f : The path to a FASTA file containing genes/mRNAs, with exons in uppercase and introns in lowercase.
 - -m : A text file with a list of motifs. Each motif should be on an individual line. Motifs may contain IUPAC ambiguous nucleotides.
 - -o : The path and name of the output png file.
-- -t : Molecule type of input fasta file. DNA (Contains Thymine) or RNA (contains Uracil).
+- -t : Molecule type of input fasta file. DNA (contains Thymine) or RNA (contains Uracil).
