@@ -2,7 +2,7 @@
 
 ***Author:*** Wyatt Eng
 
-***Goal:*** Parse a FASTA file that contains a gene (with introns and exons) and identify biological motifs. Motifs are short sequences of DNA that have biological significance.
+***Goal:*** Parse a FASTA file that contains a gene (with introns and exons) and identify biological motifs. Motifs are short sequences of DNA that have biological significance. The current program is scalable and can handle any number of sequences and motifs. 
 
 ### Required Input
 - -f : The path to a FASTA file containing genes/mRNAs, with exons in uppercase and introns in lowercase.
